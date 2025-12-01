@@ -16,6 +16,7 @@
     - `kubectl get pods`: list all pods in the current namespace
     - `kubectl get services`: list all services in the current namespace
     - `kubectl get deployments`: list all deployments in the current namespace
+    - `kubectl get svc`: shorthand for `kubectl get services`
     - `kubectl describe pod <pod-name>`: get detailed information about a specific pod
     - `kubectl logs <pod-name>`: fetch logs from a specific pod
     - `kubectl apply -f <file.yaml>`: create or update resources defined in a YAML file
@@ -65,3 +66,48 @@ multipass exec master -- sudo k3s kubectl get nodes
 ```
 
 You should see all nodes (master and workers) listed as Ready.
+
+## Ex: Deploy Caddy server
+
+1. Create a file named `caddy-deployment.yml` with the following content:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: caddy-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: caddy
+  template:
+    metadata:
+      labels:
+        app: caddy
+    spec:
+      containers:
+        - name: caddy
+          image: caddy:latest
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: caddy-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: caddy
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+```
+
+2. Apply the deployment and service:
+
+```bash
+kubectl apply -f caddy-deployment.yml
+```
