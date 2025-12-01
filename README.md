@@ -22,7 +22,12 @@
     - `kubectl delete -f <file.yaml>`: delete resources defined in a YAML file
     - `kubectl exec -it <pod-name> -- /bin/bash`: open a terminal session inside a pod
 
-## Cluster with multipass
+## Ex: Cluster with multipass
+
+### Prerequisites:
+
+- Install [multipass](https://multipass.run/)
+- Ensure you have internet connectivity to download K3s
 
 ### 1. Create VMs with multipass:
 
